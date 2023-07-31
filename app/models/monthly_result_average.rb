@@ -1,0 +1,2 @@
+class MonthlyResultAverage < ApplicationRecord
+end

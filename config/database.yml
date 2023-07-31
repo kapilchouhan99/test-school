@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  idle_timeout: 60
+  port: 5432
+
+development:
+  <<: *default
+  adapter: postgresql
+  database: test-school
+  username: postgres
+  password: postgres
+  host: localhost
+  port: 5432
+
+test:
+  <<: *default
+  adapter: postgresql
+  database: test-school
+  username: postgres
+  password: postgres
+  host: localhost
+  port: 5432

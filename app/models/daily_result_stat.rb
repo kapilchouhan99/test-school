@@ -1,0 +1,3 @@
+class DailyResultStat < ApplicationRecord
+	
+end

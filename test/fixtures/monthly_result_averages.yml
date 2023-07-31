@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 1
+  subject: MyString
+  daily_low: 1.5
+  daily_high: 1.5
+  daily_volume: 
+
+two:
+  date: 1
+  subject: MyString
+  daily_low: 1.5
+  daily_high: 1.5
+  daily_volume: 
