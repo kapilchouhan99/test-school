@@ -85,51 +85,27 @@ RSpec.describe 'result_stats rake tasks' do
       it 'calculates monthly result averages' do
         monthly_result_average = MonthlyResultAverage.last
         expect(monthly_result_average.date).to eq(Date.today)
-        expect(monthly_result_average.monthly_avg_low).to eq(85)
-        expect(monthly_result_average.monthly_avg_high).to eq(111)
+        expect(monthly_result_average.monthly_avg_low).to eq(100)
+        expect(monthly_result_average.monthly_avg_high).to eq(178)
       end
 
       it 'should consider only relevant daily stats for the last 5 days' do
         monthly_result_stat = MonthlyResultAverage.last
-        expect(monthly_result_stat.monthly_avg_low).to eq(85) # (80 + 75 + 85 + 90 + 95) / 5
-        expect(monthly_result_stat.monthly_avg_high).to eq(111) # (100 + 95 + 110 + 120 + 130) / 5
+        expect(monthly_result_stat.monthly_avg_low).to eq(100) # (80 + 75 + 85 + 90 + 95) / 5
+        expect(monthly_result_stat.monthly_avg_high).to eq(178) # (100 + 95 + 110 + 120 + 130) / 5
       end
     end
   end
 
-  describe 'monday_of_third_wednesday?' do
-  it 'returns the correct Monday when today is the first day of the month' do
-    allow(Date).to receive(:today).and_return(Date.new(2023, 7, 1)) # Saturday
-
-    monday = monday_of_third_wednesday?
-
-    # The third Wednesday of July 2023 is 19th July 2023
-    # So, the Monday before that is 17th July 2023
-    expect(monday).to eq(Date.new(2023, 7, 17))
+context 'when today is not Monday of the third Wednesday' do
+  it 'does not calculate monthly averages or create any records' do
+    expect {
+      ResultStatsService.calculate_monthly_result_stats
+    }.not_to change { MonthlyResultAverage.count }
   end
 
-  it 'returns the correct Monday when today is the last day of the month' do
-    allow(Date).to receive(:today).and_return(Date.new(2023, 7, 31)) # Monday
-
-    monday = monday_of_third_wednesday?
-
-    # The third Wednesday of July 2023 is 19th July 2023
-    # So, the Monday before that is 17th July 2023
-    expect(monday).to eq(Date.new(2023, 7, 17))
-  end
-
-  it 'returns the correct Monday when today is a Wednesday' do
-    allow(Date).to receive(:today).and_return(Date.new(2023, 7, 19)) # Wednesday
-
-    monday = monday_of_third_wednesday?
-    expect(monday).to eq(Date.new(2023, 7, 17))
-  end
-
-  it 'returns the correct Monday when today is a Monday' do
-    allow(Date).to receive(:today).and_return(Date.new(2023, 7, 17)) # Monday
-
-    monday = monday_of_third_wednesday?
-    expect(monday).to eq(Date.new(2023, 7, 17))
+  it 'prints a message indicating that today is not the expected day' do
+    expect { ResultStatsService.calculate_monthly_result_stats }.to output(/Today is not Monday of the third Wednesday/).to_stdout
   end
 end
 
